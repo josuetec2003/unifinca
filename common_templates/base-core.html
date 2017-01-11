@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>UNIFINCA</title>
+    {% load static %}
+    <link rel="icon" href="{% static 'img/favicon.png' %}" sizes="32x32">
+    <link href="{% static 'css/ghpages-materialize.css' %}" type="text/css" rel="stylesheet" media="screen,projection">
+    <link href="{% static 'css/jquery.dataTables.css' %}" type="text/css" rel="stylesheet" media="screen,projection">
+
+    <link href="{% static 'css/icon.css' %}" rel="stylesheet">
+    <style>
+        form { margin-top: 2em !important }
+        fieldset { padding: 1em; }
+        .row { margin-bottom: 0px !important }
+        .input-field { margin-top: 0px !important; }
+        .btn-ciclo-activo { background-color: #E05573 !important; }
+        .grafico { height: 350px; border: 1px solid #fff}
+    </style>
+</head>
+<body>
+	<header>
+        <div class="container">
+            <a href="#" data-activates="nav-mobile" class="button-collapse top-nav waves-effect waves-light circle hide-on-large-only">
+                <i class="material-icons">menu</i>
+            </a>
+        </div>
+
+        <ul id="nav-mobile" class="side-nav fixed" style="transform: translateX(0%);">
+            <li class="logo">
+                <a id="logo-container" href="/dashboard/" class="brand-logo">
+                    DASHBOARD
+                </a>
+            </li>
+
+            <li class="bold {% block active_algas %}{% endblock %}"><a href="/algas/" class="waves-effect waves-teal">ALGAS</a></li>
+            <li class="bold {% block active_larvario %}{% endblock %}"><a href="/larvarios/" class="waves-effect waves-teal">LARVARIOS</a></li>
+            <li class="bold {% block active_maduracion %}{% endblock %}"><a href="/maduracion/" class="waves-effect waves-teal">MADURACIÓN</a></li>
+            <li class="bold {% block active_reportes %}{% endblock %}"><a href="#" class="waves-effect waves-teal">REPORTES</a></li>
+            <hr class="style-two">
+            <li class="bold"><a href="/logout/" style="color: #ee6e73" class="waves-effect waves-teal">SALIR</a></li>   
+        </ul>
+    </header>
+
+    <main>
+        <div class="section" id="index-banner">
+            <div class="container">
+                <div class="row">
+                    <div class="col s12 m9">
+                        <h1 class="header center-on-small-only">{% block title_page %}{% endblock %}</h1>
+                        <h4 class="light red-text text-lighten-4 center-on-small-only">{% block description_page %}{% endblock %}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col s12 m9 l12">
+                    <div id="materialdesign" class="section scrollspy">
+                        {% block content_page %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+    <script src="{% static 'js/materialize.js' %}"></script>
+    <script src="{% static 'js/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'js/jquery.mask.min.js' %}"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="{% static 'js/init.js' %}"></script>
+</body>
+</html>

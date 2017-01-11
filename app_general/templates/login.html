@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>UNIFINCA - Inicio de sesión</title>
+    {% load static %}
+    <link rel="icon" href="{% static 'img/favicon.png' %}" sizes="32x32">
+    <link href="{% static 'css/ghpages-materialize.css' %}" type="text/css" rel="stylesheet" media="screen,projection">
+    <link href="{% static 'css/icon.css' %}" rel="stylesheet">
+
+    <style>
+        html, body { height: 100%; }
+        html { display: table; margin: auto; }
+        body { display: table-cell; vertical-align: middle; }
+        .margin { margin: 0 !important; }
+        .text-hidden { color: white ;}
+        .text-error { padding: 4px 0 4px 0; background: #ee6e73; color: #fff; text-align: center;}
+    </style>
+</head>
+<body>
+
+
+
+
+<div class="row">
+    <div class="col s12 l12 m12 card-panel hoverable">
+    <span class="text-hidden"> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - </span>
+      <form action="/login/" class="login-form"  method="post">
+        {% csrf_token %}
+        <div class="row">
+          <div class="input-field col s12 center">
+            <img src="http://w3lessons.info/logo.png" alt="" class="responsive-img valign profile-image-login">
+            
+            <p class="center login-form-text"> <strong>UNIFINCA</strong> - INICIO DE SESIÓN </p>
+            {% if error %}<p class="text-error">{{ msg }}</p>{% endif %}
+          </div>
+        </div>
+
+        {% for field in form %}
+            <div class="row margin">
+                <div class="input-field col s12">
+                    {% if field.name == 'username' %}
+                    <i class="material-icons prefix">perm_identity</i>
+                    {% else %}
+                    <i class="material-icons prefix">vpn_key</i>
+                    {% endif %}
+                    
+                    {{ field }}
+                </div>
+            </div>
+        {% endfor %}
+
+        
+        <!--
+        <div class="row">          
+          <div class="input-field col s12 m12 l12  login-text">
+              <input type="checkbox" id="remember-me" />
+              <label for="remember-me">Remember me</label>
+          </div>
+        </div>
+        -->
+        <div class="row">
+          <div class="input-field col s12">
+            <input type="submit" class="btn waves-effect waves-light col s12" value="ENTRAR">           
+          </div>
+        </div>        
+
+      </form>
+    </div>
+</div>
+	
+
+    
+</body>
+</html>

@@ -1,0 +1,46 @@
+{% extends "base-core.html" %}
+
+{% block description_page %}
+	UNIFINCA
+{% endblock %}
+
+{% block content_page %}
+	<div class="row">
+		<div class="col l6 m6 s12">
+			<label for="visualizar-como">Visualizar como:</label>
+			<select id="visualizar-como" class="browser-default">
+				<option value="line" selected>Líneas</option>
+				<option value="bar">Barras</option>
+				<option value="column">Columnas</option>
+				<option value="pie" >Pie</option>
+			</select>			
+		</div>
+	</div>
+	<br>
+	<table id="datatable" style="display: none">
+		<thead>
+			<tr>
+				<th></th>
+				<th>pH</th>
+				<th>Temperatura</th>
+				<th>Oxígeno</th>
+				<th>Salinidad</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for dict in datos %}
+			<tr>
+				<th>{{ dict.sala__modulo__nombre }}, {{ dict.sala__nombre }}</th>
+				<th>{{ dict.PH|floatformat }}</th>
+				<th>{{ dict.TEMP|floatformat }}</th>
+				<th>{{ dict.OXI|floatformat }}</th>
+				<th>{{ dict.SAL|floatformat }}</th>				
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	<div class="row">
+		<div id="grafico-parametros" class="col l12 grafico"></div>
+	</div>
+{% endblock %}

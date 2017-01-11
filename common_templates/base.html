@@ -1,0 +1,101 @@
+{% extends "base-core.html" %}
+
+{% comment %}
+    BLOQUES EN BASE-CORE
+    ----
+    block active_larvario
+    block active_algas
+    block active_maduracion
+
+    block title_page
+    block description_page
+    block content_page
+
+
+    BLOQUES EN BASE
+    ----
+    block collaps_title1 -> collaps_content1
+
+
+{% endcomment %}
+
+{% block content_page %}
+    <ul class="collapsible" data-collapsible="accordion">
+        <li>
+            <div class="collapsible-header active"><i class="material-icons">mode_edit</i>{% block collaps_title1 %}{% endblock %}</div>
+            <div class="collapsible-body">{% block collaps_content1 %}{% endblock %}</div>
+        </li>
+
+        <!-- Para todos los departamentos -->
+        <li>
+            <div class="collapsible-header"><i class="material-icons">dialpad</i>Microbiología</div>
+            <div class="collapsible-body">
+                <div class="container">
+
+                    <!-- Inicio del control Tabs -->
+                    <div class="row">
+                        <div class="col s12">
+                            <ul class="tabs tab-demo z-depth-1 tabs-fixed-width">
+                                <li class="tab col s3"><a class="active" href="#tab1">Registrar análisis</a></li>
+                                <li class="tab col s3"><a href="#tab2">Análisis registrados</a></li>
+                            </ul>
+                        </div>
+
+                        <div id="tab1" class="col s12">
+
+                            <!-- Formulario para registrar analisis microbiologicos -->
+                            
+                            <form action="/general/guardar-microbiologia/" method="post" id="form-microbiologia" class="card-panel hoverable">
+                                
+                                {% csrf_token %}
+                                {% for field in form_micro %}
+                                    <div class="row">
+                                        <div class="input-field col s12 m6">
+                                            {{ field }}
+
+                                            {% if field.name != 'departamento' %}
+                                                {{ field.label_tag }}
+                                            {% endif %}
+                                        </div>                  
+                                    </div>
+                                {% endfor %}
+                                
+                                <input type="submit" class="waves-effect waves-light btn" value="Guardar">                                              
+                                <br><br>
+                            </form>                 
+                        </div>
+
+                        <div id="tab2" class="col s12">
+
+                            <!-- Tabla con informacion de los parametros registrados -->              
+                            <br>
+                            <table class="datagridview display">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Fuente</th>
+                                        <th>UFC/ml</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="tbody-data">
+                                    {% for dato in datos_micro %}
+                                    <tr>
+                                        <td>{{ dato.fecha }}</td>
+                                        <td>{{ dato.origen_agua.nombre }}</td>
+                                        <td>{{ dato.ufc }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <br>
+
+                        </div>
+                    </div>
+                    <!-- Fin del control Tabs -->
+
+                </div>
+            </div>                           
+        </li>
+    </ul>
+{% endblock %}

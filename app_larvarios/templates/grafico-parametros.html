@@ -1,0 +1,37 @@
+{% extends "base-core.html" %}
+
+{% block content_page %}
+	
+	<a href="#" class="btn btn-grafico">Ver grafico</a>	
+
+	<p>
+		<table id="datatable">
+			<thead>
+				<tr>
+					<th></th>
+					<th>pH</th>
+					<th>Temp.</th>
+					<th>Oxigeno</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				{% for dict in datos %}
+
+				<tr>
+					<th>{{ dict.sala__modulo__nombre }} - {{ dict.sala__nombre }}</th>
+					<th>{{ dict.PH|floatformat }}</th>
+					<th>{{ dict.TEMP|floatformat }}</th>
+					<th>{{ dict.OXI|floatformat }}</th>
+					
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</p>
+
+	<div class="row">
+		<div id="grafico" class="col l12"></div>
+	</div>
+
+{% endblock %}
