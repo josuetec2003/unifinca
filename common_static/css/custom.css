@@ -1,0 +1,15 @@
+form { margin-top: 2em !important }
+fieldset { padding: 1em; }
+.row { margin-bottom: 0px !important }
+.input-field { margin-top: 0px !important; }
+.btn-sala { padding: 0 1rem !important; }
+.btn-ciclo-activo { background-color: #E05573 !important; }
+.grafico { height: 350px; border: 1px solid #fff}
+.bordered a { font-size: 0.8em !important; }
+.brand-logo img { width: 55% }
+.red-text.text-lighten-4 { color: #D0DAF1 !important; }
+.tabs .tab a { color: #004080 !important;}
+.tabs .indicator { background-color: #0B64D0 !important; }
+.side-nav a { color: #004080;}
+.user-logged-in{ text-align: center}
+#index-banner { background-color: #004080 !important; }

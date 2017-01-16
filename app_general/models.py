@@ -21,6 +21,18 @@ class Microbiologia(models.Model):
 	def __str__(self):
 		return str(self.ufc)
 
+class DatoParametroAgua(models.Model):
+	origen_agua = models.ForeignKey(OrigenAgua)
+	departamento = models.CharField(max_length=15)
+	fecha_ingreso = models.DateTimeField(auto_now_add=True)
+	ph = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='pH')
+	temperatura = models.DecimalField(max_digits=5, decimal_places=2)
+	oxigeno = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+	salinidad = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+
+	class Meta:
+		ordering = ['-fecha_ingreso', 'departamento']
+
 @python_2_unicode_compatible
 class ModelTest(models.Model):
 	nombre = models.CharField(max_length=10)

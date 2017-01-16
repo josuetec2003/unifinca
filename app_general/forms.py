@@ -2,7 +2,14 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 
-from .models import Microbiologia
+from .models import Microbiologia, DatoParametroAgua
+
+class DatoParametroAguaForm(forms.ModelForm):
+	class Meta:
+		model = DatoParametroAgua
+		fields = '__all__'
+		widgets = { 'departamento': forms.HiddenInput() }
+
 
 class MicrobiologiaForm(forms.ModelForm):
 	class Meta:

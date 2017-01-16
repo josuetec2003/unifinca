@@ -92,7 +92,11 @@ $(function () {
             Materialize.toast(data.respuesta, 3000, 'rounded');
 
             if (data.hasOwnProperty('sala_id'))
-                $('a#'+data.sala_id).addClass('btn-ciclo-activo');
+            {
+                $sala = $('a#' + data.sala_id);
+                $sala.addClass('btn-ciclo-activo');
+                $sala.html( $sala.html().replace(/\(.*?\)/, '(' + data.num_ciclo + ')') );
+            }
         }, 'json');
     });
 
@@ -131,7 +135,7 @@ $(function () {
         // if (!guardar)
         //     return false;
 
-        $.post('/maduracion/guardar-datos-maduracion/', $(this).serialize(), function (data) {
+        $.post('/maduracion/guardar-datos/', $(this).serialize(), function (data) {
             $('#form-datos-maduracion').trigger('reset');
             Materialize.toast(data.respuesta, 3000, 'rounded');
             $('#datos-maduracion').prepend(data.fila);
@@ -141,23 +145,36 @@ $(function () {
     $('.btn-sala').each(function () {
         var sala_id = $(this).attr('id');
         var $this = $(this);
+
         $.get('/larvarios/verificar-ciclo-activo/', {'sala_id': sala_id}, function (data) {
+            console.log(data.ok + ' ' + data.num_ciclo);
+
             if (data.ok)
+            {
                 $this.addClass(data.class);
+                $this.html( $this.html() + '(' + data.num_ciclo + ')' );
+            } else {
+                $this.html( $this.html() + '(' + data.num_ciclo + ')' );
+            }
+
+            $('#modal' + sala_id + ' #id_numero_ciclo').val(data.num_ciclo + 1);
         }, 'json');
     });
 
-    $('#form-guardar-params').on('submit', function (e) {
+    $('#form-params-agua').on('submit', function (e) {
         e.preventDefault();
 
-        $.post('/larvarios/parametros-agua/guardar/', $(this).serialize(), function (data) {
-            $('#form-guardar-params').trigger('reset');
+        var source = $(this).attr('data-source');
+        var url = (source == 'params-ciclos') ? '/larvarios/' : '/general/';
+
+        $.post(url + 'parametros-agua/guardar/', $(this).serialize(), function (data) {
+            $('#form-params-agua').trigger('reset');
             Materialize.toast(data.respuesta, 3000, 'rounded');
             $('#datos-parametros').prepend(data.fila);
         }, 'json');
     });
 
-    function cargar_grafico_parametros (tipo = "column")
+    function cargar_grafico_parametros (tipo = "line")
     {
         Highcharts.chart('grafico-parametros', {
             data:  { table: 'datatable' },
@@ -167,7 +184,7 @@ $(function () {
                 allowDecimals: true,
                 title: { text: 'Valor según parámetro' }
             },
-            tooltip: {
+            tooltip: { 
                 formatter: function () {
                     return '<strong>' + this.series.name + '</strong><br/>' +
                         this.point.y + ' ' + this.point.name.toLowerCase();
@@ -179,7 +196,7 @@ $(function () {
     cargar_grafico_parametros();
 
     $('#visualizar-como').on('change', function () {
-        cargar_grafico_parametros($(this).val());
+        cargar_grafico_parametros( $(this).val() );
     }); 
 
 })

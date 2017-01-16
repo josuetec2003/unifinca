@@ -19,7 +19,7 @@ class Sala(models.Model):
 	modulo = models.ForeignKey(Modulo)
 
 	def __str__(self):
-		return '%s > %s' % (self.modulo.nombre, self.nombre)
+		return '%s > %s > %s' % (self.modulo.departamento, self.modulo.nombre, self.nombre)
 
 
 @python_2_unicode_compatible

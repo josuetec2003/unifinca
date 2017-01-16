@@ -5,8 +5,8 @@ from django.conf import settings # Para obtener el departamento
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg, Sum
 
-from app_general.models import Microbiologia, ModelTest
-from app_general.forms import MicrobiologiaForm
+from app_general.models import Microbiologia, DatoParametroAgua as DPAG
+from app_general.forms import MicrobiologiaForm, DatoParametroAguaForm as DPAForm
 
 from .models import Modulo, Estado, CicloLarva, Sala, DatoParametroAgua
 from .forms import CicloLarvaForm, DatoParametroAguaForm
@@ -20,7 +20,11 @@ def index(request):
 
 	# variables form_micro y consulta van a base.html
 	form_micro = MicrobiologiaForm(initial={'departamento': depto})
-	consulta = Microbiologia.objects.filter(departamento=depto, fecha__date=datetime.today()).order_by('-fecha')
+	consulta1 = Microbiologia.objects.filter(departamento=depto, fecha__date=datetime.today()).order_by('-fecha')
+
+	# variables form_params y consulta van a base.html
+	form_params = DPAForm(initial={'departamento': depto})
+	consulta2 = DPAG.objects.filter(departamento=depto).order_by('-fecha_ingreso')
 
 	# ciclos y analisis de larvas en salas
 	modulos = Modulo.objects.filter(departamento=depto)
@@ -31,10 +35,12 @@ def index(request):
 
 	contexto = {
 		'form_micro': form_micro,
-		'form_ciclo': form_ciclo, 
+		'form_ciclo': form_ciclo,
+		'form_params': form_params,
+		'datos_micro': consulta1,
+		'datos_params': consulta2,
+		'modulos': modulos,
 		'depto': depto, 
-		'datos_micro': consulta,
-		'modulos': modulos
 	}
 
 	return render(request, 'larvarios.html', contexto)
@@ -50,13 +56,13 @@ def nuevo_ciclo(request):
 				numero_ciclo = form.cleaned_data['numero_ciclo']
 				sala = form.cleaned_data['sala']
 
-				# verificar si existe un ciclo activo para una sala especifica
+				# verificar si existe un ciclo activo para esta sala
 				estado_activo = Estado.objects.get(pk=1)
 				existe_ciclo = CicloLarva.objects.filter(sala=sala, estado=estado_activo)
 
 				if not existe_ciclo:
 					form.save()
-					return JsonResponse({'sala_id': sala.id, 'respuesta': 'Un nuevo ciclo ha sido iniciado'})
+					return JsonResponse({'sala_id': sala.id, 'num_ciclo': numero_ciclo, 'respuesta': 'Un nuevo ciclo ha sido iniciado'})
 				else:
 					return JsonResponse({'respuesta': 'Ciclo %d aun está activo' % existe_ciclo[0].numero_ciclo})
 				
@@ -100,13 +106,18 @@ def cerrar_ciclo(request):
 def verificar_ciclo_activo(request):
 	sala = Sala.objects.get(pk=request.GET.get('sala_id'))
 	estado_activo = Estado.objects.get(pk=1)
+	estado_terminado = Estado.objects.get(pk=2)
 	
 	ciclo = CicloLarva.objects.filter(sala=sala, estado=estado_activo)
 
-	if ciclo:
-		return JsonResponse({'ok': True, 'class': 'btn-ciclo-activo'})
-	else:
-		return JsonResponse({'ok': False})
+	if ciclo: # La sala tiene un ciclo activo
+		return JsonResponse({'ok': True, 'num_ciclo': ciclo[0].numero_ciclo, 'class': 'btn-ciclo-activo'})
+	else:     # La sala no tiene ciclo activo, se obtendra cual fue el ultimo ciclo
+		# select * from ciclolarva where sala = n and estado = 'terminado' order by numero ciclo desc limit 1;
+		ultimo_ciclo = CicloLarva.objects.filter(sala=sala, estado=estado_terminado).order_by('-numero_ciclo')[:1]
+
+		if ultimo_ciclo:
+			return JsonResponse({'ok': False, 'num_ciclo': ultimo_ciclo[0].numero_ciclo})
 
 
 @login_required()

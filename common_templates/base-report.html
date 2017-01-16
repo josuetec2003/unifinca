@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Document</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">	
+	<style>
+		body { font-family: "Serif"; font-size: 8em; }
+		h5.table {
+			color: #1167B2;
+		}
+		table {
+		    width: 100%;
+		    display: table;
+		}
+		table, th, td {
+		    border: none;
+		}
+		table {
+		    border-collapse: collapse;
+		    border-spacing: 0;
+		}
+		tbody {
+		    display: table-row-group;
+		    vertical-align: middle;
+		    border-color: inherit;
+		}
+		tr {
+		    display: table-row;
+		    vertical-align: inherit;
+		    border-color: inherit;
+		}
+		td {
+			font-size: 0.8em !important;
+		}
+		td, th {
+		    padding: 10px 5px;
+		    display: table-cell;
+		    text-align: left;
+		    vertical-align: middle;
+		    border-radius: 2px;
+		}
+		table>thead>tr, table>tbody>tr {
+		    border-bottom: 1px solid #d0d0d0;
+		}
+
+		.container {
+			border: 1px solid #000;
+			width: 100%;
+			margin: 0 auto;
+		}
+
+	</style>
+</head>
+<body>
+	{% block content %}{% endblock %}
+</body>
+</html>

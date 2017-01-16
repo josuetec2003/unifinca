@@ -1,0 +1,53 @@
+{% extends "base-core.html" %}
+
+{% block description_page %}
+	Módulo de reportes
+{% endblock %}
+
+
+{% block content_page %}
+
+	<form action="/reporte/test/" method="post" target="_blank" class="card-panel">
+		<h5>Reporte de parámetros en salas activas</h5>
+
+		{% csrf_token %}
+		<input type="submit" value="Generar reporte" class="btn">
+	</form>
+
+	<form action="/reporte/maduracion/" method="post" target="_blank" class="card-panel">
+		<h5>Reporte de maduración</h5>
+		{% csrf_token %}
+		
+		<p>
+			<label for="inicio">FECHA INICIO</label>
+			<input type="date" name="inicio" id="inicio">			
+		</p>
+
+		<p>
+			<label for="final">FECHA FINAL</label>
+			<input type="date" name="final" id="final">			
+		</p>
+
+		<input type="submit" value="Generar reporte" class="btn">
+		
+	</form>
+
+	<form action="/reporte/algas/" method="post" target="_blank" class="card-panel">
+		<h5>Reporte de algas</h5>
+		{% csrf_token %}
+		
+		<p>
+			<label for="inicio">FECHA INICIO</label>
+			<input type="date" name="inicio" id="inicio">			
+		</p>
+
+		<p>
+			<label for="final">FECHA FINAL</label>
+			<input type="date" name="final" id="final">			
+		</p>
+
+		<input type="submit" value="Generar reporte" class="btn">
+		
+	</form>
+	
+{% endblock %}

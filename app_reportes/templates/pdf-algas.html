@@ -1,0 +1,25 @@
+{% extends "base-report.html" %}
+
+{% block content %}
+	<br>
+
+	<table>
+		<tr>
+			<th>Fecha</th>
+			<th>TW</th>
+			<th>CM</th>
+			<th>NV</th>
+			<th>Total células</th>
+		</tr>
+		
+		{% for dato in object_list %}
+		<tr>
+			<td>{{ dato.fecha }}</td>
+			<td>{{ dato.tw }}</td>
+			<td>{{ dato.cm }}</td>
+			<td>{{ dato.nv }}</td>
+			<td>{{ dato.total_algas }}</td>
+		</tr>			
+		{% endfor %}
+	</table>
+{% endblock %}

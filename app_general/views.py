@@ -10,8 +10,8 @@ from django.contrib.auth.decorators import login_required
 from datetime import datetime
 import json
 
-from .models import Microbiologia
-from .forms import MicrobiologiaForm, MyAuthenticationForm
+from .models import Microbiologia, DatoParametroAgua
+from .forms import MicrobiologiaForm, MyAuthenticationForm, DatoParametroAguaForm
 
 @login_required()
 def guardar_microbiologia(request):
@@ -26,6 +26,22 @@ def guardar_microbiologia(request):
 			tr = '<tr><td>%s</td><td>%d</td><td>%s</td></tr>' % (ultimo_objeto.origen_agua.nombre, ultimo_objeto.ufc, ultimo_objeto.fecha)
 			
 			resultado = {'ok': True, 'msg': 'Información guardada con éxito', 'fila': tr}
+			return JsonResponse(resultado)
+
+
+@login_required()
+def guardar_params_agua(request):
+	
+	#if request.is_ajax():
+	if request.method == 'POST':
+		form = DatoParametroAguaForm(data=request.POST)
+
+		if form.is_valid():				
+			ultimo_objeto = form.save() # save() guarda y devuelve el objeto
+
+			tr = '<tr><td>%s</td><td>%s</td><td>%.2f</td><td>%.2f</td><td>%.2f</td><td>%.2f</td></tr>' % (ultimo_objeto.fecha_ingreso, ultimo_objeto.origen_agua, ultimo_objeto.ph, ultimo_objeto.temperatura, ultimo_objeto.oxigeno, ultimo_objeto.salinidad)
+			
+			resultado = {'respuesta': 'Información guardada con éxito', 'fila': tr}
 			return JsonResponse(resultado)
 
 

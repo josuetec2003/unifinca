@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'app_general.apps.AppGeneralConfig',
     'app_larvarios.apps.AppLarvariosConfig',
     'app_maduracion.apps.AppMaduracionConfig',
+    'app_reportes.apps.AppReportesConfig',
+    'wkhtmltopdf',
 ]
 
 DEPARTAMENTOS = {
@@ -134,6 +136,7 @@ USE_THOUSAND_SEPARATOR = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR + '/sfotify/static'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'common_static'),

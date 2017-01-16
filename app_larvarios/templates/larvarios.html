@@ -12,17 +12,19 @@
 	<div class="container">
 		<div class="row">
 			<div class="col m12 s12 l12">
-				<table class="bordered">
+				<br>
+				<span style="color: #E05573">Ciclo activo</span> | <span style="color: #26a69a">Ciclo terminado</span>
+				<hr class="style-one">
+				<table class="bordered responsive-table">
 					<tbody>
 						{% for modulo in modulos %}
 						<tr>
-							<th><h5>{{ modulo.nombre }}</h5></th>
+							<th><h6> <strong>{{ modulo.nombre }}</strong></h6></th>
 
 							{% for sala in modulo.sala_set.all %}
 							<td>
 								<a class='dropdown-button btn btn-sala' href='#' id="{{ sala.id }}" data-activates='dropdown{{ sala.id }}'>
-									<i class="material-icons left">toc</i>
-									{{ sala.nombre }}
+									<i class="material-icons left">toc</i> {{ sala.nombre }}
 								</a>
 								<ul id='dropdown{{ sala.id }}' class='dropdown-content'>
 									<li><a href="#modal{{ sala.id }}">Nuevo ciclo</a></li>

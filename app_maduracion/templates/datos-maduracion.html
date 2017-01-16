@@ -1,0 +1,69 @@
+{% extends "base-core.html" %}
+
+<!-- Para definir en activo el link en el menu lateral-->
+{% block active_maduracion %}active{% endblock %}
+
+{% block description_page %}
+	Departamento de Maduración <br>
+	<small>{{ sala.modulo.nombre }}, {{ sala.nombre }}</small>
+{% endblock %}
+
+{% block content_page %}
+	<!-- Inicio del control Tabs -->
+	<div class="row">
+		<div class="col s12">
+			<ul class="tabs tab-demo z-depth-1 tabs-fixed-width">
+				<li class="tab col s3"><a href="#tabA">Registro de datos</a></li>
+				<li class="tab col s3"><a href="#tabB">Datos registrados</a></li>
+			</ul>
+		</div>
+
+		<div id="tabA" class="col s12 m8 l6">			
+			<form action="/maduracion/guardar-datos/" method="post" class="card-panel" id="form-datos-maduracion">
+				{% csrf_token %}
+				
+				{{ form }}
+
+				<div class="row">
+					<div class="input-field col m8 s12 l6">
+						<input type="submit" value="GUARDAR" class="waves-effect waves-light btn">
+					</div>
+				</div>		
+				<br>
+			</form>			
+		</div>
+		
+		<div id="tabB" class="col s12">
+			<br>
+			Mostrando datos de los últimos 30 días
+			<hr class="style-one">
+			<table class="datagridview">
+				<thead>
+					<tr>
+						<th>Fecha</th>
+						<th>Cópula</th>
+						<th>Ovas</th>
+						<th>Nauplio</th>
+						<th>Descarte</th>
+						<th>Factura de Nauplios</th>
+					</tr>
+				</thead>
+
+				<tbody id="datos-maduracion">
+					{% for dato in datos_maduracion %}
+					<tr>
+						<td>{{ dato.fecha }}</td>
+						<td>{{ dato.copula }}</td>
+						<td>{{ dato.ovas }}</td>
+						<td>{{ dato.nauplio }}</td>
+						<td>{{ dato.descarte }}</td>
+						<td>{{ dato.factura_nauplios }}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			<br>
+		</div>
+	</div>
+	<!-- Fin del control Tabs -->
+{% endblock %}

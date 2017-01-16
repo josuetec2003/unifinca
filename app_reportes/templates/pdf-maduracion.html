@@ -1,0 +1,41 @@
+{% extends "base-report.html" %}
+
+{% block content %}
+	{% regroup object_list by sala as sala_list %}
+	<br>
+	<h4>Filtro: {{ filter }}</h4>
+	<hr>
+	
+	{% for sala in sala_list %}
+		<h5 class="table">{{ sala.grouper.modulo.nombre }} ► {{ sala.grouper.nombre }}</h5>
+
+		<table class="bordered">
+			<thead>
+				<tr>
+					<th>Fecha</th>
+					<th>Cópulas</th>
+					<th>Ovas</th>
+					<th>Nauplios</th>
+					<th>Factura</th>
+					<th>Descarte</th>
+				</tr>				
+			</thead>
+
+			<tbody>
+				{% for dato in sala.list %}
+				<tr>
+					<td>{{ dato.fecha }}</td>
+					<td>{{ dato.copula }}</td>
+					<td>{{ dato.ovas }}</td>
+					<td>{{ dato.nauplio }}</td>
+					<td>{{ dato.factura_nauplios }}</td>
+					<td>{{ dato.descarte }}</td>
+				</tr>
+				{% endfor %}				
+			</tbody>
+		</table>
+
+		<br>
+	{% endfor %}
+
+{% endblock %}

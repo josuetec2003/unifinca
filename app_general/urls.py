@@ -5,5 +5,6 @@ from . import views
 
 urlpatterns = [
 	url(r'^guardar-microbiologia/$', views.guardar_microbiologia, name="guardar_microbiologia"),	
-	url(r'^filtrar-microbiologia/$', views.filtrar_microbiologia, name="filtrar_microbiologia"),	
+	url(r'^parametros-agua/guardar/$', views.guardar_params_agua, name="guardar_params_agua"),	
+	url(r'^filtrar-microbiologia/$', views.filtrar_microbiologia, name="filtrar_microbiologia"),
 ]

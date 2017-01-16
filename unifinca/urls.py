@@ -28,4 +28,5 @@ urlpatterns = [
     url(r'^general/', include('app_general.urls')),
     url(r'^larvarios/', include('app_larvarios.urls')),
     url(r'^maduracion/', include('app_maduracion.urls')),
+    url(r'^reporte/', include('app_reportes.urls')),
 ]

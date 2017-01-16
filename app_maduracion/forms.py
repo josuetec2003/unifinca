@@ -6,4 +6,4 @@ class MaduracionForm(forms.ModelForm):
 	class Meta:
 		model = Maduracion
 		fields = '__all__'
-		#widgets = { 'fecha': forms.HiddenInput() }
+		widgets = { 'sala': forms.HiddenInput() }

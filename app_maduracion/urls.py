@@ -5,5 +5,6 @@ from . import views
 
 urlpatterns = [
 	url(r'^$', views.index, name="index"),	
-	url(r'^guardar-datos-maduracion/$', views.guardar_datos_maduracion, name="guardar_datos_maduracion"),	
+	url(r'^sala/(?P<id>\d+)/$', views.datos_maduracion, name="datos_maduracion"),
+	url(r'^guardar-datos/$', views.guardar_datos, name="guardar_datos"),
 ]

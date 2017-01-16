@@ -14,6 +14,7 @@
         html, body { height: 100%; }
         html { display: table; margin: auto; }
         body { display: table-cell; vertical-align: middle; }
+        img { width: 120px;}
         .margin { margin: 0 !important; }
         .text-hidden { color: white ;}
         .text-error { padding: 4px 0 4px 0; background: #ee6e73; color: #fff; text-align: center;}
@@ -31,7 +32,7 @@
         {% csrf_token %}
         <div class="row">
           <div class="input-field col s12 center">
-            <img src="http://w3lessons.info/logo.png" alt="" class="responsive-img valign profile-image-login">
+            <img src="{% static 'img/logo.png' %}" alt="Logo">
             
             <p class="center login-form-text"> <strong>UNIFINCA</strong> - INICIO DE SESIÓN </p>
             {% if error %}<p class="text-error">{{ msg }}</p>{% endif %}
@@ -45,14 +46,11 @@
                     <i class="material-icons prefix">perm_identity</i>
                     {% else %}
                     <i class="material-icons prefix">vpn_key</i>
-                    {% endif %}
-                    
+                    {% endif %}                    
                     {{ field }}
                 </div>
             </div>
-        {% endfor %}
-
-        
+        {% endfor %}        
         <!--
         <div class="row">          
           <div class="input-field col s12 m12 l12  login-text">
