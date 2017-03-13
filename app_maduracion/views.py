@@ -3,8 +3,9 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings # Para obtener el departamento
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 
-from app_general.models import Microbiologia, DatoParametroAgua
+from app_general.models import OrigenAgua, Microbiologia, DatoParametroAgua
 from app_general.forms import MicrobiologiaForm, DatoParametroAguaForm
 
 from app_larvarios.models import Modulo, Sala
@@ -12,7 +13,7 @@ from app_larvarios.models import Modulo, Sala
 from .models import Maduracion
 from .forms import MaduracionForm
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 
 @login_required()
@@ -21,14 +22,16 @@ def index(request):
 
 	# variables form_micro y consulta van a base.html
 	form_micro = MicrobiologiaForm(initial={'departamento': depto})
-	consulta1 = Microbiologia.objects.filter(departamento=depto, fecha__date=datetime.today()).order_by('-fecha')
+	ultimo_mes = datetime.today() - timedelta(days=30)
+	consulta1 = Microbiologia.objects.filter(departamento=depto, fecha__gte=ultimo_mes).order_by('-fecha')
 
 	form_maduracion = MaduracionForm()
 	consulta2 = Maduracion.objects.all().order_by('-fecha')
 
 	# variables form_params y consulta van a base.html
 	form_params = DatoParametroAguaForm(initial={'departamento': depto})
-	consulta3 = DatoParametroAgua.objects.filter(departamento=depto).order_by('-fecha_ingreso')
+	#consulta3 = DatoParametroAgua.objects.filter(departamento=depto).order_by('-fecha_ingreso')
+	consulta4 =  OrigenAgua.objects.all()
 
 	# ciclos y analisis de larvas en salas
 	modulos = Modulo.objects.filter(departamento=depto)
@@ -40,8 +43,9 @@ def index(request):
 		'depto': depto, 
 		'datos_micro': consulta1,
 		'datos_maduracion': consulta2,
-		'datos_params': consulta3,
-		'modulos': modulos
+		#'datos_params': consulta3,
+		'datos_origen_agua': consulta4,
+		'modulos': modulos,
 	}
 
 	return render(request, 'maduracion.html', contexto)

@@ -1,5 +1,15 @@
 form { margin-top: 2em !important }
 fieldset { padding: 1em; }
+input[type="date"].standard {
+	border-radius: 3px !important;
+	border: 1px solid #BFBFD0 !important;
+	color: #7B7B87 !important;
+	display: inline !important;
+	height: 30px !important;
+	margin: 0 !important;
+	padding: 0 0 0 5px !important;
+	width: auto !important;
+}
 .row { margin-bottom: 0px !important }
 .input-field { margin-top: 0px !important; }
 .btn-sala { padding: 0 1rem !important; }
@@ -12,4 +22,6 @@ fieldset { padding: 1em; }
 .tabs .indicator { background-color: #0B64D0 !important; }
 .side-nav a { color: #004080;}
 .user-logged-in{ text-align: center}
+.cbo-blue-text { color: red !important;}
 #index-banner { background-color: #004080 !important; }
+

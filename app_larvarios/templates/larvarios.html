@@ -13,8 +13,10 @@
 		<div class="row">
 			<div class="col m12 s12 l12">
 				<br>
-				<span style="color: #E05573">Ciclo activo</span> | <span style="color: #26a69a">Ciclo terminado</span>
+				<span style="background: #E05573; padding: 3px; color: #fff">Ciclo activo</span> | 
+				<span style="background: #26a69a; padding: 3px; color: #fff">Ciclo terminado</span>
 				<hr class="style-one">
+				
 				<table class="bordered responsive-table">
 					<tbody>
 						{% for modulo in modulos %}
@@ -31,7 +33,7 @@
 									<li><a href="#!" data-sala-id="{{ sala.id }}" class="cerrar-ciclo">Cerrar ciclo</a></li>
 									<li class="divider"></li>
 									<li><a href="/larvarios/parametros-agua/{{ sala.id }}/">Parámetros de agua</a></li>
-									<li><a href="#!">Información de larvas</a></li>									
+									<li><a href="/larvarios/datos-larva/{{ sala.id }}/">Información de larvas</a></li>									
 								</ul>
 								<!-- Modal Structure -->
 								<div id="modal{{ sala.id }}" class="modal">

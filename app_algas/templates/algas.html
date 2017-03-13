@@ -39,28 +39,37 @@
 		</div>
 		<div id="tabB" class="col s12">
 			<br>
-			Mostrando datos de los últimos 30 días
+			Datos de: 
+			<a href="#" class="algas-filtro" data-value="hoy">Hoy</a> -  
+			<a href="#" class="algas-filtro" data-value="mes">Hace 30 días</a>
 			<hr class="style-one">
-			<table class="datagridview">
+			Desde: <input type="date" class="standard algas-desde"> 
+			Hasta: <input type="date" class="standard algas-hasta"> 
+			<a href="#" class="algas-filtro" data-value="rango">Filtrar</a>			
+			<hr class="style-one">
+
+			<div id="grafico-algas" class="col l12 grafico"></div>			
+
+			<table id="tabla-algas">
 				<thead>
 					<tr>
 						<th>Fecha</th>
 						<th>TW</th>
 						<th>CM</th>
 						<th>NV</th>
-						<th>Total</th>
 					</tr>
 				</thead>
 
 				<tbody id="datos-algas">
 					{% for dato in datos_algas %}
 					<tr>
-						<td>{{ dato.fecha }}</td>
+						<th>{{ dato.fecha }}</th>
 						<td>{{ dato.tw }}</td>
 						<td>{{ dato.cm }}</td>
 						<td>{{ dato.nv }}</td>
-						<td><strong>{{ dato.total_algas }}</strong></td>
 					</tr>
+					{% empty %}
+					<tr><td>No hay registros</td></tr>
 					{% endfor %}
 				</tbody>
 			</table>

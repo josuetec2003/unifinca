@@ -7,10 +7,10 @@ from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 
-from .models import Microbiologia, DatoParametroAgua
+from .models import Microbiologia, DatoParametroAgua, OrigenAgua
 from .forms import MicrobiologiaForm, MyAuthenticationForm, DatoParametroAguaForm
 
 @login_required()
@@ -112,6 +112,29 @@ def sign_off(request):
 	logout(request)
 	return HttpResponseRedirect('/')
 
+@login_required()
+def filtrar_params_agua(request):
+	filtro, tr, origen = request.GET.get('filtro'), "", OrigenAgua.objects.get(pk=request.GET.get('fuente'))
+
+	if filtro == 'hoy':
+		datos = DatoParametroAgua.objects.filter(departamento = request.GET.get('depto'), origen_agua = origen, fecha_ingreso = datetime.today())
+
+		for dato in datos:
+			tr += '<tr><th>%s</th><td>%.2f</td><td>%.2f</td><td>%.2f</td><td>%.2f</td></tr>' % (dato.fecha_ingreso, dato.ph, dato.temperatura, dato.oxigeno, dato.salinidad)
+
+	elif filtro == 'mes':
+		ultimo_mes = datetime.today() - timedelta(days=30)
+		datos = DatoParametroAgua.objects.filter(departamento = request.GET.get('depto'), origen_agua = origen, fecha_ingreso__gte = ultimo_mes).order_by('fecha_ingreso')
+		
+		for dato in datos:
+			tr += '<tr><th>%s</th><td>%.2f</td><td>%.2f</td><td>%.2f</td><td>%.2f</td></tr>' % (dato.fecha_ingreso, dato.ph, dato.temperatura, dato.oxigeno, dato.salinidad)
+	else: #rango
+		datos = DatoParametroAgua.objects.filter(departamento = request.GET.get('depto'), origen_agua = origen, fecha_ingreso__range = (request.GET.get('desde'), request.GET.get('hasta'))).order_by('fecha_ingreso')
+		
+		for dato in datos:
+			tr += '<tr><th>%s</th><td>%.2f</td><td>%.2f</td><td>%.2f</td><td>%.2f</td></tr>' % (dato.fecha_ingreso, dato.ph, dato.temperatura, dato.oxigeno, dato.salinidad)
+
+	return JsonResponse({'origen': origen.nombre, 'depto': request.GET.get('depto'), 'respuesta': tr})
 
 
 

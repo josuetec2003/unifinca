@@ -8,10 +8,10 @@ class Alga(models.Model):
 	tw = models.IntegerField(null=True, blank=True, verbose_name='TW (Thalassiosira weissflogii)')
 	cm = models.IntegerField(null=True, blank=True, verbose_name='CM (Chaetoceros muelleri)')
 	nv = models.IntegerField(null=True, blank=True, verbose_name='NV (Navicula)')
-	fecha = models.DateTimeField(auto_now_add=True)
+	fecha = models.DateField(auto_now_add=True)
 
 	def _total_algas(self):
-		return self.tw + self.cm + self.nv
+		return int(self.tw) + int(self.cm) + int(self.nv)
 
 	total_algas = property(_total_algas)
 

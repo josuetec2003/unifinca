@@ -7,47 +7,88 @@
 
 {% block content_page %}
 
-	<form action="/reporte/test/" method="post" target="_blank" class="card-panel">
-		<h5>Reporte de parámetros en salas activas</h5>
+	<div class="row">
+		<div class="col m12 12 l12 card-panel">
+			<h5>Departamento de Larvarios: Calidad de agua</h5>
+			<hr class="style-one">
 
-		{% csrf_token %}
-		<input type="submit" value="Generar reporte" class="btn">
-	</form>
+			<p>
+				<strong>Datos de:</strong>
+				<select id="rpt1-datosde" class="browser-default cbo-blue-text">
+					<option value="">Seleccione</option>
+					<option value="todo-promedio">Todas las salas (promedio)</option>
+					<option value="todo-diario">Todas las salas (diario) (Sin gráfico)</option>
+					{% for ciclo in ciclos %}
+					<option value="{{ ciclo.id }}">{{ ciclo.sala }}</option>	
+					{% endfor %}
+				</select>
+				<hr class="style-one">
+				<strong>Filtro</strong>
+				desde <input type="date" class="standard" id="rpt1-desde"> Hasta <input type="date" class="standard" id="rpt1-hasta">
+				<hr class="style-one">
+				<button class="btn rpt1-buscar">Mostrar datos</button> 
+				<button class="btn-flat rpt-mostrar-grafico" data-rpt="rpt1"><i class="material-icons right">trending_up</i> Mostrar gráfico</button>
+			</p>
 
-	<form action="/reporte/maduracion/" method="post" target="_blank" class="card-panel">
-		<h5>Reporte de maduración</h5>
-		{% csrf_token %}
-		
-		<p>
-			<label for="inicio">FECHA INICIO</label>
-			<input type="date" name="inicio" id="inicio">			
-		</p>
+			<div id="rpt1-grafico" class="col l12 grafico" style="display: none"></div>
+			<table id="rpt1-tabla" width="100%"></table>
+		</div>
 
-		<p>
-			<label for="final">FECHA FINAL</label>
-			<input type="date" name="final" id="final">			
-		</p>
+		<div class="col m12 12 l12 card-panel">
+			<h5>Departamento de Maduración</h5>
+			<hr class="style-one">
 
-		<input type="submit" value="Generar reporte" class="btn">
-		
-	</form>
+			<p>
+				<strong>Datos de:</strong>
+				<select id="rpt2-datosde" class="browser-default cbo-blue-text">
+					<option value="">Seleccione sala</option>
+					{% for sala in salas_maduracion %}
+					<option value="{{ sala.id }}">{{ sala }}</option>
+					{% endfor %}
+				</select>
+				<hr class="style-one">
+				<strong>Filtro</strong>
+				desde <input type="date" class="standard" id="rpt2-desde"> Hasta <input type="date" class="standard" id="rpt2-hasta">
+				<hr class="style-one">
+				<button class="btn rpt2-buscar">Mostrar datos</button> 
+				<button class="btn-flat rpt-mostrar-grafico" data-rpt="rpt2"><i class="material-icons right">trending_up</i> Mostrar gráfico</button>
+			</p>
 
-	<form action="/reporte/algas/" method="post" target="_blank" class="card-panel">
-		<h5>Reporte de algas</h5>
-		{% csrf_token %}
-		
-		<p>
-			<label for="inicio">FECHA INICIO</label>
-			<input type="date" name="inicio" id="inicio">			
-		</p>
+			<div id="rpt2-grafico" class="col l12 grafico" style="display: none"></div>
+			<table id="rpt2-tabla" width="100%"></table>
+		</div>
 
-		<p>
-			<label for="final">FECHA FINAL</label>
-			<input type="date" name="final" id="final">			
-		</p>
+		<div class="col m12 12 l12 card-panel">
+			<h5>Microbiología</h5>
+			<hr class="style-one">
 
-		<input type="submit" value="Generar reporte" class="btn">
-		
-	</form>
+			<p>
+				<strong>Datos de:</strong>
+				<select id="rpt3-depto" class="browser-default cbo-blue-text">
+					<option value="">Seleccione departamento</option>
+					<option value="a">Algas</option>
+					<option value="l">Larvario</option>
+					<option value="m">Maduración</option>					
+				</select>
+				<hr class="style-one">
+				<strong>Muestra de agua de:</strong>
+				<select id="rpt3-muestra" class="browser-default cbo-blue-text">
+					<option value="">Seleccione</option>
+					{% for muestra in aguas_muestra %}
+					<option value="{{ muestra.id }}">{{ muestra }}</option>					
+					{% endfor %}				
+				</select>
+				<hr class="style-one">
+				<strong>Filtro</strong>
+				desde <input type="date" class="standard" id="rpt3-desde"> Hasta <input type="date" class="standard" id="rpt3-hasta">
+				<hr class="style-one">
+				<button class="btn rpt3-buscar">Mostrar datos</button> 
+				<button class="btn-flat rpt-mostrar-grafico" data-rpt="rpt3"><i class="material-icons right">trending_up</i> Mostrar gráfico</button>
+			</p>
+
+			<div id="rpt3-grafico" class="col l12 grafico" style="display: none"></div>
+			<table id="rpt3-tabla" width="100%"></table>
+		</div>
+	</div>
 	
 {% endblock %}

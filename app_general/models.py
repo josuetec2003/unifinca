@@ -16,7 +16,7 @@ class Microbiologia(models.Model):
 	origen_agua = models.ForeignKey(OrigenAgua)
 	departamento = models.CharField(max_length=15)
 	ufc = models.IntegerField(verbose_name='UFC/ml')
-	fecha = models.DateTimeField(auto_now_add=True)
+	fecha = models.DateField(auto_now_add=True)
 
 	def __str__(self):
 		return str(self.ufc)
@@ -24,7 +24,7 @@ class Microbiologia(models.Model):
 class DatoParametroAgua(models.Model):
 	origen_agua = models.ForeignKey(OrigenAgua)
 	departamento = models.CharField(max_length=15)
-	fecha_ingreso = models.DateTimeField(auto_now_add=True)
+	fecha_ingreso = models.DateField(auto_now_add=True)
 	ph = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='pH')
 	temperatura = models.DecimalField(max_digits=5, decimal_places=2)
 	oxigeno = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)

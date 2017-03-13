@@ -4,14 +4,15 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.conf import settings # Para obtener el departamento
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg, Sum
+from django.utils import timezone
 
-from app_general.models import Microbiologia, DatoParametroAgua as DPAG
+from app_general.models import OrigenAgua, Microbiologia, DatoParametroAgua as DPAG
 from app_general.forms import MicrobiologiaForm, DatoParametroAguaForm as DPAForm
 
-from .models import Modulo, Estado, CicloLarva, Sala, DatoParametroAgua
-from .forms import CicloLarvaForm, DatoParametroAguaForm
+from .models import Modulo, Estado, CicloLarva, Sala, DatoParametroAgua, DatosLarva
+from .forms import CicloLarvaForm, DatoParametroAguaForm, DatosLarvaForm
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 
 @login_required()
@@ -20,11 +21,13 @@ def index(request):
 
 	# variables form_micro y consulta van a base.html
 	form_micro = MicrobiologiaForm(initial={'departamento': depto})
-	consulta1 = Microbiologia.objects.filter(departamento=depto, fecha__date=datetime.today()).order_by('-fecha')
+	ultimo_mes = datetime.today() - timedelta(days=30)
+	consulta1 = Microbiologia.objects.filter(departamento=depto, fecha__gte=ultimo_mes).order_by('-fecha')
 
 	# variables form_params y consulta van a base.html
 	form_params = DPAForm(initial={'departamento': depto})
-	consulta2 = DPAG.objects.filter(departamento=depto).order_by('-fecha_ingreso')
+	#consulta2 = DPAG.objects.filter(departamento=depto).order_by('-fecha_ingreso')
+	consulta4 =  OrigenAgua.objects.all()
 
 	# ciclos y analisis de larvas en salas
 	modulos = Modulo.objects.filter(departamento=depto)
@@ -38,7 +41,8 @@ def index(request):
 		'form_ciclo': form_ciclo,
 		'form_params': form_params,
 		'datos_micro': consulta1,
-		'datos_params': consulta2,
+		#'datos_params': consulta2,
+		'datos_origen_agua': consulta4,
 		'modulos': modulos,
 		'depto': depto, 
 	}
@@ -118,6 +122,8 @@ def verificar_ciclo_activo(request):
 
 		if ultimo_ciclo:
 			return JsonResponse({'ok': False, 'num_ciclo': ultimo_ciclo[0].numero_ciclo})
+		else:
+			return HttpResponse('Ningun ciclo activo')
 
 
 @login_required()
@@ -128,7 +134,8 @@ def parametros_agua(request, id):
 		ciclo = CicloLarva.objects.get(sala=sala, estado=estado_activo)
 		form = DatoParametroAguaForm(initial={'ciclo': ciclo})
 
-		datos_params = DatoParametroAgua.objects.filter(ciclo=ciclo).order_by('-fecha_ingreso')
+		ultimo_mes = datetime.today() - timedelta(days=30)
+		datos_params = DatoParametroAgua.objects.filter(ciclo=ciclo, fecha_ingreso__gte = ultimo_mes).order_by('fecha_ingreso')
 
 		return render(request, 'parametros-agua.html', {'sala': sala.nombre, 'form': form, 'id': id, 'datos_params': datos_params})
 	except Sala.DoesNotExist:
@@ -152,6 +159,69 @@ def parametros_agua_guardar(request):
 				return JsonResponse(resultado)
 			else:
 				return HttpResponseRedirect('/larvarios/')
+
+@login_required()
+def filtrar_params_agua(request):
+	filtro, tr = request.GET.get('filtro'), ""
+
+	sala = Sala.objects.get(pk=request.GET.get('idsala'))
+	estado_activo = Estado.objects.get(pk=1)
+	ciclo = CicloLarva.objects.get(sala=sala, estado=estado_activo)
+
+	if filtro == 'hoy':
+		datos = DatoParametroAgua.objects.filter(ciclo = ciclo, fecha_ingreso = timezone.now())
+
+		for dato in datos:
+			tr += '<tr><th>%s</th><td>%.2f</td><td>%.2f</td><td>%.2f</td><td>%.2f</td></tr>' % (dato.fecha_ingreso, dato.ph, dato.temperatura, dato.oxigeno, dato.salinidad)
+
+	elif filtro == 'mes':
+		ultimo_mes = datetime.today() - timedelta(days=30)
+		datos = DatoParametroAgua.objects.filter(ciclo = ciclo, fecha_ingreso__gte = ultimo_mes)
+		
+		for dato in datos:
+			tr += '<tr><th>%s</th><td>%.2f</td><td>%.2f</td><td>%.2f</td><td>%.2f</td></tr>' % (dato.fecha_ingreso, dato.ph, dato.temperatura, dato.oxigeno, dato.salinidad)
+	else: #rango
+		datos = DatoParametroAgua.objects.filter(ciclo = ciclo, fecha_ingreso__range = (request.GET.get('desde'), request.GET.get('hasta')))
+		
+		for dato in datos:
+			tr += '<tr><th>%s</th><td>%.2f</td><td>%.2f</td><td>%.2f</td><td>%.2f</td></tr>' % (dato.fecha_ingreso, dato.ph, dato.temperatura, dato.oxigeno, dato.salinidad)
+
+	return JsonResponse({'respuesta': tr})
+
+
+@login_required()
+def datos_larva(request, id):
+	try:
+		sala = Sala.objects.get(pk=id)
+		estado_activo = Estado.objects.get(pk=1)
+		ciclo = CicloLarva.objects.get(sala=sala, estado=estado_activo)
+		form = DatosLarvaForm(initial={'ciclo_larva': ciclo})
+
+		ultimo_mes = datetime.today() - timedelta(days=30)
+		datos_larva = DatosLarva.objects.filter(ciclo_larva=ciclo, fecha__gte = ultimo_mes).order_by('fecha')	
+
+		return render(request, 'datos-larva.html', {'sala': sala.nombre, 'form': form, 'id': id, 'datos_larva': datos_larva})
+	except Sala.DoesNotExist:
+		return HttpResponse('No existe la sala')
+	except CicloLarva.DoesNotExist:
+		return HttpResponseRedirect('/larvarios/')
+
+@login_required()
+def datos_larva_guardar(request):
+	if request.method == 'POST':
+		form = DatosLarvaForm(data=request.POST)
+
+		if form.is_valid():
+			ultimo_objeto = form.save()
+
+			if request.is_ajax():
+				tr = '<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>' % (ultimo_objeto.fecha_ingreso, ultimo_objeto.ph, ultimo_objeto.temperatura, ultimo_objeto.oxigeno, ultimo_objeto.salinidad)
+					
+				resultado = {'respuesta': 'Información guardada con éxito', 'fila': tr}
+				return JsonResponse(resultado)
+			else:
+				return HttpResponseRedirect('/larvarios/')
+
 
 
 

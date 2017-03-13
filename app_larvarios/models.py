@@ -39,7 +39,7 @@ class Estadio(models.Model):
 
 
 @python_2_unicode_compatible
-class CicloLarva(models.Model):
+class CicloLarva(models.Model): 
 	poblacion_inicial = models.PositiveIntegerField(verbose_name='Población inicial')
 	fecha_inicio = models.DateTimeField(auto_now_add=True)
 	fecha_final = models.DateTimeField(null=True, blank=True)
@@ -52,16 +52,16 @@ class CicloLarva(models.Model):
 
 
 @python_2_unicode_compatible
-class MedidaLarva(models.Model):
+class DatosLarva(models.Model):
 	fecha = models.DateField(auto_now_add=True)
-	numero_dia = models.SmallIntegerField()
-	retraso = models.SmallIntegerField(verbose_name='Porcentaje de retraso')
-	mortalidad = models.SmallIntegerField(verbose_name='Porcentaje de mortalidad')
-	deformidad = models.SmallIntegerField(verbose_name='Porcentaje de deformidad')
-	poblacion = models.PositiveIntegerField(verbose_name='Población actual')
+	numero_dia = models.SmallIntegerField(null=True, blank=True)
+	retraso = models.SmallIntegerField(verbose_name='Porcentaje de retraso', null=True, blank=True)
+	mortalidad = models.SmallIntegerField(verbose_name='Porcentaje de mortalidad', null=True, blank=True)
+	deformidad = models.SmallIntegerField(verbose_name='Porcentaje de deformidad', null=True, blank=True)
+	poblacion = models.PositiveIntegerField(verbose_name='Población actual', null=True, blank=True)
 	supervivencia = models.SmallIntegerField(verbose_name='Porcentaje de supervivencia', null=True, blank=True)
-	estadio = models.ForeignKey(Estadio)
 	imm = models.CharField(max_length=25, verbose_name='Índice de masa muscular', null=True, blank=True)
+	estadio = models.ForeignKey(Estadio, verbose_name='Estadío (requerido)')
 	ciclo_larva = models.ForeignKey(CicloLarva)
 
 	def __str__(self):
@@ -69,7 +69,7 @@ class MedidaLarva(models.Model):
 
 class DatoParametroAgua(models.Model):
 	ciclo = models.ForeignKey(CicloLarva)
-	fecha_ingreso = models.DateTimeField(auto_now_add=True)
+	fecha_ingreso = models.DateField(auto_now_add=True)
 	ph = models.DecimalField(max_digits=5, decimal_places=2, verbose_name='pH')
 	temperatura = models.DecimalField(max_digits=5, decimal_places=2)
 	oxigeno = models.DecimalField(max_digits=5, decimal_places=2)

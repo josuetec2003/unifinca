@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Modulo, Sala, Estado, Estadio, CicloLarva, MedidaLarva, DatoParametroAgua
+from .models import Modulo, Sala, Estado, Estadio, CicloLarva, DatosLarva, DatoParametroAgua
 
 admin.site.register(Estado)
 admin.site.register(Estadio)
@@ -19,9 +19,9 @@ class SalaAdmin(admin.ModelAdmin):
 class CicloLarvaAdmin(admin.ModelAdmin):
 	list_display = ('numero_ciclo', 'sala', 'poblacion_inicial', 'fecha_inicio', 'fecha_final', 'estado')
 
-@admin.register(MedidaLarva)
+@admin.register(DatosLarva)
 class MedidaLarvaAdmin(admin.ModelAdmin):
-	list_display = [f.name for f in MedidaLarva._meta.fields]
+	list_display = [f.name for f in DatosLarva._meta.fields]
 
 @admin.register(DatoParametroAgua)
 class DatoParametroAguaAdmin(admin.ModelAdmin):
