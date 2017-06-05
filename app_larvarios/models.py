@@ -54,7 +54,6 @@ class CicloLarva(models.Model):
 @python_2_unicode_compatible
 class DatosLarva(models.Model):
 	fecha = models.DateField(auto_now_add=True)
-	numero_dia = models.SmallIntegerField(null=True, blank=True)
 	retraso = models.SmallIntegerField(verbose_name='Porcentaje de retraso', null=True, blank=True)
 	mortalidad = models.SmallIntegerField(verbose_name='Porcentaje de mortalidad', null=True, blank=True)
 	deformidad = models.SmallIntegerField(verbose_name='Porcentaje de deformidad', null=True, blank=True)
@@ -65,7 +64,7 @@ class DatosLarva(models.Model):
 	ciclo_larva = models.ForeignKey(CicloLarva)
 
 	def __str__(self):
-		return str(self.numero_dia)
+		return str(self.fecha)
 
 class DatoParametroAgua(models.Model):
 	ciclo = models.ForeignKey(CicloLarva)

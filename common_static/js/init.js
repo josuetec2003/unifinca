@@ -300,15 +300,21 @@ $(function () {
             'filtro': valor,
             'idsala': idsala,
             'desde': $('.params-larva-desde').val(),
-            'hasta': $('.params-larva-hasta').val()
+            'hasta': $('.params-larva-hasta').val(),
+            'script': $('.script').val()
         };
 
         $.get('/larvarios/filtrar-params-agua/', GET, function (data) {
             console.log(data.respuesta);
-            $('#datos-parametros').empty().html(data.respuesta);
+            $('#datos-parametros, #datos-larva').empty().html(data.respuesta);
 
-            cargar_grafico_params_agua('Salas', 'larvarios');
-            tabla_params_larvarios.reset(); // actualiza con los datos de la tabla para generar el excel
+            try
+            {
+                cargar_grafico_params_agua('Salas', 'larvarios');
+                tabla_params_larvarios.reset(); // actualiza con los datos de la tabla para generar el excel                
+            } catch (e) {
+                console.log(e);
+            }
         }, 'json');
     });
 

@@ -44,10 +44,10 @@ def rpt1(request):
 			tr += """
 				<tr>
 					<th>%s %s</th>
-					<td>%.2f</td>
-					<td>%.2f</td>
-					<td>%.2f</td>
-					<td>%.2f</td>
+					<td>%s</td>
+					<td>%s</td>
+					<td>%s</td>
+					<td>%s</td>
 				</tr>
 			""" % (fila['sala__modulo__nombre'], fila['sala__nombre'], fila['PH'], fila['TEMP'], fila['OXI'], fila['SAL'])
 

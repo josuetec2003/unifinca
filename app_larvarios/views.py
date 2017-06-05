@@ -162,12 +162,36 @@ def parametros_agua_guardar(request):
 
 @login_required()
 def filtrar_params_agua(request):
-	filtro, tr = request.GET.get('filtro'), ""
+	filtro, tr, script = request.GET.get('filtro'), "", request.GET.get('script')
 
 	sala = Sala.objects.get(pk=request.GET.get('idsala'))
 	estado_activo = Estado.objects.get(pk=1)
 	ciclo = CicloLarva.objects.get(sala=sala, estado=estado_activo)
 
+	# Consultas para informacion de larva
+	if script == 'info':
+		if filtro == 'hoy':
+			datos = DatosLarva.objects.filter(ciclo_larva = ciclo, fecha = timezone.now())
+
+			for dato in datos:
+				tr = '<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>' % (dato.fecha, dato.retraso, dato.mortalidad, dato.deformidad, dato.poblacion, dato.supervivencia, dato.imm, dato.estadio)
+
+		elif filtro == 'mes':
+			ultimo_mes = datetime.today() - timedelta(days=30)
+			datos = DatosLarva.objects.filter(ciclo_larva = ciclo, fecha__gte = ultimo_mes)
+			
+			for dato in datos:
+				tr = '<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>' % (dato.fecha, dato.retraso, dato.mortalidad, dato.deformidad, dato.poblacion, dato.supervivencia, dato.imm, dato.estadio)
+		else: #rango
+			datos = DatosLarva.objects.filter(ciclo_larva = ciclo, fecha__range = (request.GET.get('desde'), request.GET.get('hasta')))
+			
+			for dato in datos:
+				tr = '<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>' % (dato.fecha, dato.retraso, dato.mortalidad, dato.deformidad, dato.poblacion, dato.supervivencia, dato.imm, dato.estadio)
+
+		return JsonResponse({'respuesta': tr})
+
+
+	# Consultas para calidad de agua
 	if filtro == 'hoy':
 		datos = DatoParametroAgua.objects.filter(ciclo = ciclo, fecha_ingreso = timezone.now())
 
@@ -215,7 +239,7 @@ def datos_larva_guardar(request):
 			ultimo_objeto = form.save()
 
 			if request.is_ajax():
-				tr = '<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>' % (ultimo_objeto.fecha_ingreso, ultimo_objeto.ph, ultimo_objeto.temperatura, ultimo_objeto.oxigeno, ultimo_objeto.salinidad)
+				tr = '<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>' % (ultimo_objeto.fecha, ultimo_objeto.retraso, ultimo_objeto.mortalidad, ultimo_objeto.deformidad, ultimo_objeto.poblacion, ultimo_objeto.supervivencia, ultimo_objeto.imm, ultimo_objeto.estadio)
 					
 				resultado = {'respuesta': 'Información guardada con éxito', 'fila': tr}
 				return JsonResponse(resultado)
