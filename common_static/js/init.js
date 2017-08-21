@@ -173,9 +173,9 @@ $(function () {
 
         $('.waves-button-input').attr('disabled', 'disabled');
         $.post(url + 'parametros-agua/guardar/', $(this).serialize(), function (data) {
-        //     $('#form-params-agua').trigger('reset');
+            $('#form-params-agua').trigger('reset');
             Materialize.toast(data.respuesta, 3000, 'rounded');
-        //     $('#datos-parametros').prepend(data.fila);
+            $('#datos-parametros').prepend(data.fila);
         }, 'json');
         $('.waves-button-input').removeAttr('disabled');
     });
