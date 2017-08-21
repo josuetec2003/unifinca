@@ -17,7 +17,6 @@
 				<select id="rpt1-datosde" class="browser-default cbo-blue-text">
 					<option value="">Seleccione</option>
 					<option value="todo-promedio">Todas las salas (promedio)</option>
-					<option value="todo-diario">Todas las salas (diario) (Sin gráfico)</option>
 					{% for ciclo in ciclos %}
 					<option value="{{ ciclo.id }}">{{ ciclo.sala }}</option>	
 					{% endfor %}
