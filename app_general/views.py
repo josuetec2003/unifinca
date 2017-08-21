@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 
 from datetime import datetime, timedelta
 import json
+from time import sleep
 
 from .models import Microbiologia, DatoParametroAgua, OrigenAgua
 from .forms import MicrobiologiaForm, MyAuthenticationForm, DatoParametroAguaForm
@@ -35,7 +36,7 @@ def guardar_params_agua(request):
 	#if request.is_ajax():
 	if request.method == 'POST':
 		form = DatoParametroAguaForm(data=request.POST)
-
+		sleep(3)
 		if form.is_valid():				
 			ultimo_objeto = form.save() # save() guarda y devuelve el objeto
 

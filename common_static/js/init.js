@@ -39,6 +39,8 @@ $(function () {
     $('#form-microbiologia').on('submit', function (e) {
         e.preventDefault();
 
+        $('.btn-ajax').attr('disabled', 'disabled');
+
         $.post('/general/guardar-microbiologia/', $(this).serialize(), function (data) {
             if (data.ok)
             {
@@ -48,19 +50,31 @@ $(function () {
             }
                 
         }, 'json');
+
+        $('.btn-ajax').removeAttr('disabled');
     });
 
     $('#form-conteo-algas').on('submit', function (e) {
         e.preventDefault();
 
-        $.post('/algas/guardar-conteo/', $(this).serialize(), function (data) {
-            if (data.ok)
-            {
-                $('#form-conteo-algas').trigger('reset');
-                Materialize.toast(data.msg, 3000, 'rounded');
-                $('#datos-algas').prepend(data.fila);
-            }
-        }, 'json');
+        if ($('#id_tw').val() == '' && $('#id_cm').val() == '' && $('#id_nv').val() == '' && $('#id_t').val() == '')
+            Materialize.toast('El formulario está vacío', 3000, 'rounded');
+        else
+        {
+            $('.btn-ajax').attr('disabled', 'disabled');
+            $.post('/algas/guardar-conteo/', $(this).serialize(), function (data) {
+                if (data.ok)
+                {
+                    $('#form-conteo-algas').trigger('reset');
+                    Materialize.toast(data.msg, 3000, 'rounded');
+                    $('#datos-algas').prepend(data.fila);
+                } else {
+                    $('#form-conteo-algas').trigger('reset');
+                    Materialize.toast(data.msg, 3000, 'rounded');
+                }
+            }, 'json');
+            $('.btn-ajax').removeAttr('disabled');
+        }
     });
 
     $('#form-filtrar-microbiologia').on('submit', function (e) {
@@ -85,6 +99,7 @@ $(function () {
         e.preventDefault();
 
         $('input[name=poblacion_inicial]').unmask();
+        $('.btn-ajax').attr('disabled', 'disabled');
 
         $.post('/larvarios/nuevo-ciclo/', $(this).serialize(), function (data) {
             console.log(data.respuesta);
@@ -99,6 +114,8 @@ $(function () {
                 $('.modal').modal('close');
             }
         }, 'json');
+
+        $('.btn-ajax').removeAttr('disabled');
     });
 
     $('.cerrar-ciclo').click(function (e) {
@@ -119,27 +136,13 @@ $(function () {
     $('#form-datos-maduracion').on('submit', function (e) {
         e.preventDefault();        
 
-        // PENDIENTE DE CAMBIO O ELIMINACION
-        // var total_valores = 0;
-
-        // $.each($(this).serialize().split('&'), function (indice, elemento) {
-        //     var claves = elemento.split('=');
-
-        //     if (claves[0] != 'csrfmiddlewaretoken')
-        //     {
-        //         if (claves[0] == '')
-        //             total_valores++;
-        //     }
-                
-        // });
-
-        // if (!guardar)
-        //     return false;
+        $('.btn-ajax').attr('disabled', 'disabled');
 
         $.post('/maduracion/guardar-datos/', $(this).serialize(), function (data) {
             $('#form-datos-maduracion').trigger('reset');
             Materialize.toast(data.respuesta, 3000, 'rounded');
             $('#datos-maduracion').prepend(data.fila);
+            $('.btn-ajax').removeAttr('disabled');
         }, 'json');
     });
 
@@ -153,9 +156,9 @@ $(function () {
             if (data.ok)
             {
                 $this.addClass(data.class);
-                $this.html( $this.html() + '(' + data.num_ciclo + ')' );
+                $this.html( $this.html() + '(Ciclo ' + data.num_ciclo + ')' );
             } else {
-                $this.html( $this.html() + '(' + data.num_ciclo + ')' );
+                $this.html( $this.html() + '(Ciclo ' + data.num_ciclo + ')' );
             }
 
             $('#modal' + sala_id + ' #id_numero_ciclo').val(data.num_ciclo + 1);
@@ -163,28 +166,32 @@ $(function () {
     });
 
     $('#form-params-agua').on('submit', function (e) {
-        e.preventDefault();
-
+        e.preventDefault();        
+       
         var source = $(this).attr('data-source');
         var url = (source == 'params-ciclos') ? '/larvarios/' : '/general/';
 
+        $('.waves-button-input').attr('disabled', 'disabled');
         $.post(url + 'parametros-agua/guardar/', $(this).serialize(), function (data) {
-            $('#form-params-agua').trigger('reset');
+        //     $('#form-params-agua').trigger('reset');
             Materialize.toast(data.respuesta, 3000, 'rounded');
-            $('#datos-parametros').prepend(data.fila);
+        //     $('#datos-parametros').prepend(data.fila);
         }, 'json');
+        $('.waves-button-input').removeAttr('disabled');
     });
 
     $('#form-datos-larva').on('submit', function (e) {
         e.preventDefault();
 
-        var source = $(this).attr('data-source');
+        var source = $(this).attr('data-source');        
+        $('.btn-ajax').attr('disabled', 'disabled');
 
         $.post('/larvarios/datos-larva/guardar/', $(this).serialize(), function (data) {
             $('#form-datos-larva').trigger('reset');
             Materialize.toast(data.respuesta, 3000, 'rounded');
             $('#datos-larva').prepend(data.fila);
         }, 'json');
+        $('.btn-ajax').removeAttr('disabled');
     });
 
     // function cargar_grafico_parametros (tipo = "line")
@@ -240,6 +247,9 @@ $(function () {
         var valor = $(this).attr('data-value');
         var desde = $('.algas-desde').val();
         var hasta = $('.algas-hasta').val();
+
+        if (desde == '' && hasta == '')
+            return;
 
         $.get('/algas/filtro/', {'filtro': valor, 'desde': desde, 'hasta': hasta}, function (data) {
             console.log(data.respuesta);

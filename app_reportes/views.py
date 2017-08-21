@@ -13,7 +13,7 @@ from wkhtmltopdf.views import PDFTemplateResponse
 
 from datetime import datetime
 
-@login_required()
+
 def rpt1(request):
 	datos_de = request.GET.get('datos_de')
 	estado_activo = Estado.objects.get(pk=1)
@@ -125,7 +125,7 @@ def rpt1(request):
 	return JsonResponse({'respuesta': tr})
 
 
-@login_required()
+
 def rpt2(request):
 	datos_de = request.GET.get('datos_de')
 	sala = Sala.objects.get(pk=datos_de)
@@ -171,7 +171,7 @@ def rpt2(request):
 
 	return JsonResponse({'respuesta': tr})
 
-@login_required()
+
 def rpt3(request):
 	depto = settings.DEPARTAMENTOS[request.GET.get('depto')]
 	muestra = OrigenAgua.objects.get(pk=request.GET.get('muestra'))
@@ -208,7 +208,7 @@ def rpt3(request):
 	return JsonResponse({'respuesta': tr})
 	
 
-@login_required()
+
 def index(request):
 	estado_activo = Estado.objects.get(pk=1)
 	ciclos_activos = CicloLarva.objects.filter(estado=estado_activo) # Para CBO de rpt1

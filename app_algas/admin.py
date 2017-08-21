@@ -3,5 +3,5 @@ from .models import Alga
 
 @admin.register(Alga)
 class AlgaAdmin(admin.ModelAdmin):
-	list_display = ('total_algas', 'fecha', 'tw', 'cm', 'nv')
+	list_display = ('fecha', 'tw', 'cm', 'nv', 't')
 

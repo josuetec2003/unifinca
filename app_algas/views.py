@@ -12,6 +12,7 @@ from app_general.models import Microbiologia, DatoParametroAgua, OrigenAgua
 from app_general.forms import MicrobiologiaForm, DatoParametroAguaForm
 
 from datetime import datetime, timedelta
+from time import sleep
 
 @login_required()
 def index(request):
@@ -48,13 +49,16 @@ def index(request):
 def guardar_conteo(request):
 	if request.method == "POST":
 		form = AlgaForm(data=request.POST)
-
+		
 		if form.is_valid():
 			ultimo_objeto = form.save() # save() guarda y devuelve el objeto
 
-			tr = '<tr><td>%s</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td></tr>' % (ultimo_objeto.fecha, ultimo_objeto.tw, ultimo_objeto.cm, ultimo_objeto.nv, ultimo_objeto.total_algas)
+			tr = '<tr><td>%s</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td></tr>' % (ultimo_objeto.fecha, ultimo_objeto.tw, ultimo_objeto.cm, ultimo_objeto.nv, ultimo_objeto.t)
 				
 			resultado = {'ok': True, 'msg': 'Información guardada con éxito', 'fila': tr}
+			return JsonResponse(resultado)
+		else:
+			resultado = {'ok': False, 'msg': 'Error'}
 			return JsonResponse(resultado)
 
 @login_required()
@@ -67,19 +71,22 @@ def filtro(request):
 		datos = Alga.objects.filter(fecha = datetime.today())
 
 		for dato in datos:
-			tr += '<tr><th>%s</th><td>%d</td><td>%d</td><td>%d</td></tr>' % (dato.fecha, dato.tw, dato.cm, dato.nv)
+			tr += '<tr><th>%s</th><td>%d</td><td>%d</td><td>%d</td><td>%d</td></tr>' % (dato.fecha, dato.tw, dato.cm, dato.nv, dato.t)
 
 	elif filtro == 'mes':
 		ultimo_mes = datetime.today() - timedelta(days=30)
 		datos = Alga.objects.filter(fecha__gte = ultimo_mes)
 		
 		for dato in datos:
-			tr += '<tr><th>%s</th><td>%d</td><td>%d</td><td>%d</td></tr>' % (dato.fecha, dato.tw, dato.cm, dato.nv)
+			tr += '<tr><th>%s</th><td>%d</td><td>%d</td><td>%d</td><td>%d</td></tr>' % (dato.fecha, dato.tw, dato.cm, dato.nv, dato.t)
 	else: #rango
-		datos = Alga.objects.filter(fecha__range = (request.GET.get('desde'), request.GET.get('hasta')))
-		
+		desde = request.GET.get('desde')
+		hasta = request.GET.get('hasta')
+
+		datos = Alga.objects.filter(fecha__range = (desde, hasta))
+			
 		for dato in datos:
-			tr += '<tr><th>%s</th><td>%d</td><td>%d</td><td>%d</td></tr>' % (dato.fecha, dato.tw, dato.cm, dato.nv)
+			tr += '<tr><th>%s</th><td>%d</td><td>%d</td><td>%d</td><td>%d</td></tr>' % (dato.fecha, dato.tw, dato.cm, dato.nv, dato.t)
 
 	return JsonResponse({'respuesta': tr})
 

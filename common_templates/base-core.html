@@ -29,7 +29,11 @@
 
             <hr class="style-two">
             <li class="bold user-logged-in">
-                {{ request.user.get_full_name }}
+                {% if request.user.is_authenticated %}
+                    {{ request.user.get_full_name }}
+                {% else %}
+                    Usuario anónimo              
+                {% endif %}                
             </li>  
             <hr class="style-two">
 

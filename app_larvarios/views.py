@@ -14,6 +14,7 @@ from .forms import CicloLarvaForm, DatoParametroAguaForm, DatosLarvaForm
 
 from datetime import datetime, timedelta
 import json
+from time import sleep
 
 @login_required()
 def index(request):
@@ -148,7 +149,7 @@ def parametros_agua(request, id):
 def parametros_agua_guardar(request):
 	if request.method == 'POST':
 		form = DatoParametroAguaForm(data=request.POST)
-
+		sleep(3)
 		if form.is_valid():
 			ultimo_objeto = form.save()
 
