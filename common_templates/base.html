@@ -140,20 +140,20 @@
 
                             <br>
                             <input type="hidden" value="{{ depto }}" id="depto">
-                            <select class="browser-default" id="cbo-fuente-agua">
+                            <select class="browser-default cbo-blue-text" id="cbo-fuente-agua">
                                 <option value="">Seleccione la fuente de agua</option>
                                 {% for dato in datos_origen_agua %}
                                 <option value="{{ dato.id }}">{{ dato.nombre }}</option>
                                 {% endfor %}                               
                             </select>
                             <hr class="style-one">
-                            Datos de: 
+                            <strong>Datos de: </strong> 
                             <a href="#" class="params-algas-filtro" data-value="hoy">Hoy</a> -  
                             <a href="#" class="params-algas-filtro" data-value="mes">Hace 30 días</a> - 
                             <a href="#" class="params-algas-grafico">Mostrar gráfico</a>
                             <hr class="style-one">
-                            Desde: <input type="date" class="standard params-algas-desde"> 
-                            Hasta: <input type="date" class="standard params-algas-hasta"> 
+                            <strong>Desde:</strong> <input type="date" class="standard params-algas-desde"> 
+                            <strong>Hasta:</strong> <input type="date" class="standard params-algas-hasta"> 
                             <a href="#" class="params-algas-filtro" data-value="rango">Filtrar</a>
                             <hr class="style-one">
 

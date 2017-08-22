@@ -47,11 +47,9 @@ $(function () {
                 $('#form-microbiologia').trigger('reset');
                 Materialize.toast(data.msg, 3000, 'rounded');
                 $('#tbody-data').prepend(data.fila);
-            }
-                
-        }, 'json');
-
-        $('.btn-ajax').removeAttr('disabled');
+                $('.btn-ajax').removeAttr('disabled');
+            }                
+        }, 'json');        
     });
 
     $('#form-conteo-algas').on('submit', function (e) {
@@ -67,13 +65,13 @@ $(function () {
                 {
                     $('#form-conteo-algas').trigger('reset');
                     Materialize.toast(data.msg, 3000, 'rounded');
-                    $('#datos-algas').prepend(data.fila);
+                    $('#datos-algas').prepend(data.fila);                    
                 } else {
                     $('#form-conteo-algas').trigger('reset');
                     Materialize.toast(data.msg, 3000, 'rounded');
                 }
-            }, 'json');
-            $('.btn-ajax').removeAttr('disabled');
+                $('.btn-ajax').removeAttr('disabled');
+            }, 'json');            
         }
     });
 
@@ -112,10 +110,9 @@ $(function () {
                 $sala.addClass('btn-ciclo-activo');
                 $sala.html( $sala.html().replace(/\(.*?\)/, '(' + data.num_ciclo + ')') );
                 $('.modal').modal('close');
+                $('.btn-ajax').removeAttr('disabled');
             }
-        }, 'json');
-
-        $('.btn-ajax').removeAttr('disabled');
+        }, 'json');        
     });
 
     $('.cerrar-ciclo').click(function (e) {
@@ -146,38 +143,60 @@ $(function () {
         }, 'json');
     });
 
-    $('.btn-sala').each(function () {
-        var sala_id = $(this).attr('id');
-        var $this = $(this);
+    if (window.location.pathname === '/larvarios/')
+    {
+        $('.btn-sala').each(function () {
+            var sala_id = $(this).attr('id');
+            var $this = $(this);
 
-        $.get('/larvarios/verificar-ciclo-activo/', {'sala_id': sala_id}, function (data) {
-            console.log(data.ok + ' ' + data.num_ciclo);
+            $.get('/larvarios/verificar-ciclo-activo/', {'sala_id': sala_id}, function (data) {
+                //console.log(data.ok + ' ' + data.num_ciclo);
 
-            if (data.ok)
-            {
-                $this.addClass(data.class);
-                $this.html( $this.html() + '(Ciclo ' + data.num_ciclo + ')' );
-            } else {
-                $this.html( $this.html() + '(Ciclo ' + data.num_ciclo + ')' );
-            }
+                if (data.ok)
+                {
+                    $this.addClass(data.class);
+                    $this.html( $this.html() + '(Ciclo ' + data.num_ciclo + ')' );
+                } else {
+                    $this.html( $this.html() + '(Ciclo ' + data.num_ciclo + ')' );
+                }
 
-            $('#modal' + sala_id + ' #id_numero_ciclo').val(data.num_ciclo + 1);
-        }, 'json');
-    });
+                $('#modal' + sala_id + ' #id_numero_ciclo').val(data.num_ciclo + 1);
+            }, 'json');
+        });
+    }    
+
+    // $(document).on('submit', '#form-params-agua', function (e) {
+    //     e.preventDefault();
+    //     $('.btn-ajax-pa').attr('disabled', 'disabled');
+    //     var form_data = $(this).serialize();
+
+    //     $.ajax({
+    //         url: '/ajax-test/',
+    //         type: 'post',
+    //         data: form_data,
+    //         dataType: 'json'
+    //     }).done(function (resp) {
+    //         Materialize.toast(resp.respuesta, 3000, 'rounded');
+    //         $('.btn-ajax-pa').removeAttr('disabled');
+    //     });
+
+    //     //
+    // });
 
     $('#form-params-agua').on('submit', function (e) {
-        e.preventDefault();        
-       
+        e.preventDefault();
+        
         var source = $(this).attr('data-source');
         var url = (source == 'params-ciclos') ? '/larvarios/' : '/general/';
 
-        $('.waves-button-input').attr('disabled', 'disabled');
+        $('.btn-ajax-pa').attr('disabled', 'disabled');
+
         $.post(url + 'parametros-agua/guardar/', $(this).serialize(), function (data) {
             $('#form-params-agua').trigger('reset');
             Materialize.toast(data.respuesta, 3000, 'rounded');
             $('#datos-parametros').prepend(data.fila);
+            $('.btn-ajax-pa').removeAttr('disabled');
         }, 'json');
-        $('.waves-button-input').removeAttr('disabled');
     });
 
     $('#form-datos-larva').on('submit', function (e) {
@@ -190,8 +209,9 @@ $(function () {
             $('#form-datos-larva').trigger('reset');
             Materialize.toast(data.respuesta, 3000, 'rounded');
             $('#datos-larva').prepend(data.fila);
+            $('.btn-ajax').removeAttr('disabled');
         }, 'json');
-        $('.btn-ajax').removeAttr('disabled');
+       
     });
 
     // function cargar_grafico_parametros (tipo = "line")
@@ -328,8 +348,8 @@ $(function () {
         }, 'json');
     });
 
-    try { cargar_grafico_params_agua('Sala', 'larvarios'); } catch (err) { console.log (err) }
-    try { cargar_grafico_algas(); } catch (err) { console.log (err) }
+    try { cargar_grafico_params_agua('Sala', 'larvarios'); } catch (err) { /*console.log (err)*/ }
+    try { cargar_grafico_algas(); } catch (err) { /*console.log (err)*/ }
 
 
     // --------------------- REPORTES --------------------- //
@@ -447,15 +467,12 @@ function cargar_grafico_algas (tipo = "line")
         },
         tooltip: { 
             formatter: function () {
-                return '<strong>' + this.series.name + '</strong><br/>' +
-                    this.point.y + ' ' + this.point.name.toLowerCase();
+                return '<strong>' + this.series.name + '</strong><br/>' + this.point.y + ' ' + this.point.name.toLowerCase();
             }
         },
         plotOptions: {
             line: {
-                dataLabels: {
-                    enabled: true
-                },
+                dataLabels: { enabled: true },
                 enableMouseTracking: false
             }
         }
@@ -481,15 +498,12 @@ function cargar_grafico_params_agua (fuente, para, tipo = "line")
         },
         tooltip: { 
             formatter: function () {
-                return '<strong>' + this.series.name + '</strong><br/>' +
-                    this.point.y + ' ' + this.point.name.toLowerCase();
+                return '<strong>' + this.series.name + '</strong><br/>' + this.point.y + ' ' + this.point.name.toLowerCase();
             }
         },
         plotOptions: {
             line: {
-                dataLabels: {
-                    enabled: true
-                },
+                dataLabels: { enabled: true },
                 enableMouseTracking: true
             }
         }

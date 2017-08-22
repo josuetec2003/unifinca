@@ -14,6 +14,10 @@ from time import sleep
 from .models import Microbiologia, DatoParametroAgua, OrigenAgua
 from .forms import MicrobiologiaForm, MyAuthenticationForm, DatoParametroAguaForm
 
+def ajax_test(request):
+	sleep(3)
+	return JsonResponse({'respuesta': 'OK'})
+
 @login_required()
 def guardar_microbiologia(request):
 	
@@ -32,18 +36,17 @@ def guardar_microbiologia(request):
 
 @login_required()
 def guardar_params_agua(request):
-	
-	#if request.is_ajax():
-	if request.method == 'POST':
-		form = DatoParametroAguaForm(data=request.POST)
-		sleep(3)
-		if form.is_valid():				
-			ultimo_objeto = form.save() # save() guarda y devuelve el objeto
+	if request.is_ajax():
+		if request.method == 'POST':
+			form = DatoParametroAguaForm(data=request.POST)
+			sleep(3)
+			if form.is_valid():				
+				ultimo_objeto = form.save() # save() guarda y devuelve el objeto
 
-			tr = '<tr><td>%s</td><td>%s</td><td>%.2f</td><td>%.2f</td><td>%.2f</td><td>%.2f</td></tr>' % (ultimo_objeto.fecha_ingreso, ultimo_objeto.origen_agua, ultimo_objeto.ph, ultimo_objeto.temperatura, ultimo_objeto.oxigeno, ultimo_objeto.salinidad)
-			
-			resultado = {'respuesta': 'Información guardada con éxito', 'fila': tr}
-			return JsonResponse(resultado)
+				tr = '<tr><td>%s</td><td>%s</td><td>%.2f</td><td>%.2f</td><td>%.2f</td><td>%.2f</td></tr>' % (ultimo_objeto.fecha_ingreso, ultimo_objeto.origen_agua, ultimo_objeto.ph, ultimo_objeto.temperatura, ultimo_objeto.oxigeno, ultimo_objeto.salinidad)
+				
+				resultado = {'respuesta': 'Información guardada con éxito', 'fila': tr}
+				return JsonResponse(resultado)
 
 
 @login_required()

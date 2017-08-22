@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^$', views.form_login, name='form_login'),
     url(r'^login/$', views.validate_login, name='validate_login'),
     url(r'^logout/$', views.sign_off, name='sign_off'),
+    url(r'^ajax-test/$', views.ajax_test, name='ajax_test'),
     url(r'^admin/', admin.site.urls),
     url(r'^algas/', include('app_algas.urls')),
     url(r'^dashboard/', include('app_dashboard.urls')),
