@@ -16,6 +16,6 @@ app_maduracion/.*
 app_maduracion/templates/.*
 app_reportes/.*
 app_reportes/templates/.*
-
+*.pyc
 
 

@@ -26,7 +26,7 @@ SECRET_KEY = 'd6zdv$lvt8*y98^s&0l*7mrlxm652=203j=rn0*a_*^csp8kgn'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -90,8 +90,12 @@ WSGI_APPLICATION = 'unifinca.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'unifinca',
+	'USER': 'root',
+	'PASSWORD': 'Contrasena1',
+	'HOST': 'localhost',
+	'PORT': '3306',
     }
 }
 
@@ -136,7 +140,7 @@ USE_THOUSAND_SEPARATOR = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
-#STATIC_ROOT = BASE_DIR + '/sfotify/static'
+STATIC_ROOT = BASE_DIR + '/common_static2/'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'common_static'),
