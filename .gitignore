@@ -1,3 +1,4 @@
+db.sqlite3
 common_static/css/.*
 common_static/css/fonts/.*
 common_static/img/.*
